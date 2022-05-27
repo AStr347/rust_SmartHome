@@ -1,4 +1,5 @@
 use std::collections::LinkedList;
+
 extern crate ia_devices;
 use ia_devices::devices::device::*;
 use ia_devices::devices::soket::*;
@@ -15,7 +16,7 @@ impl Room {
             devices: LinkedList::new(),
         }
     }
-    fn add_device(&mut self, device: &impl TDevice) {
+    fn add_device(&mut self, device: impl TDevice) {
         let tmp = device.get_box();
         self.devices.push_back(tmp);
     }
@@ -40,10 +41,12 @@ impl Home {
 
 fn main() {
     let soket0 = Soket {
+        name: "Soket0 inside room".to_string(),
         power: 3000,
         state: true,
     };
     let soket1 = Soket {
+        name: "Soket1 inside room".to_string(),
         power: 0,
         state: false,
     };
@@ -55,11 +58,21 @@ fn main() {
 
     let mut room = Room::new();
 
-    room.add_device(&soket0);
-    room.add_device(&window);
-    room.add_device(&weather);
-    room.add_device(&soket1);
+    room.add_device(soket0);
+    room.add_device(window);
+    room.add_device(weather);
+    room.add_device(soket1);
 
+    for i in room.devices.iter_mut() {
+        println!("at room {}", i.get_status());
+        let dtype = i.get_type();
+        if let DeviceType::DtSoket = dtype {
+                let soket = i.as_mut();
+                soket.set_status()
+        }
+    }
+
+    println!("\n\n");
     for i in room.devices.iter() {
         println!("at room {}", i.get_status());
     }

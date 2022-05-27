@@ -14,4 +14,5 @@ pub trait TDevice{
         return DeviceType::DtNone;
     }
     fn get_box(&self) -> Box<dyn TDevice>;
+    fn set_status(&mut self);
 }

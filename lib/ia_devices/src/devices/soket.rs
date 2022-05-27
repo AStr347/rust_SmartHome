@@ -1,8 +1,8 @@
 use crate::devices::device::*;
 
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct Soket {
-    //pub name:String,
+    pub name:String,
     pub power:u32,
     pub state:bool,
 }
@@ -10,13 +10,16 @@ pub struct Soket {
 impl TDevice for Soket {
     fn get_status(&self) -> String {
         let sstate = if self.state { "on" } else { "off" };
-        return format!("it's Smart Soket\tsate: {}\tpower: {}W", sstate, self.power);
+        return format!("it's {:20}\tstate: {:5}\tpower: {:5}W", self.name, sstate, self.power);
     }
     fn get_type(&self) -> DeviceType {
         return DeviceType::DtSoket;
     }
     fn get_box(&self) -> Box<dyn TDevice> {
-        return Box::new(*self);
+        return Box::new(self.clone());
+    }
+    fn set_status(&mut self) {
+        self.change_state();
     }
 }
 

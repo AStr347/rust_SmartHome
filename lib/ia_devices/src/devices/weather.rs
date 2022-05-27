@@ -1,6 +1,6 @@
 use crate::devices::device::*;
 
-#[derive(Copy, Clone)]
+#[derive(Clone)]
 pub struct Weather {
     //pub name:String,
     pub temp:f32,
@@ -9,7 +9,7 @@ pub struct Weather {
 
 impl TDevice for Weather {
     fn get_status(&self) -> String {
-        return format!("it's Smart Weather\ttemp: {}\thum: {}%", self.temp, self.hum);
+        return format!("it's {:20}\ttemp: {:5}\thum: {:5}%", "Smart Weather", self.temp, self.hum);
     }
     fn get_type(&self) -> DeviceType {
         return DeviceType::DtWindow;
@@ -17,5 +17,8 @@ impl TDevice for Weather {
 
     fn get_box(&self) -> Box<dyn TDevice> {
         return Box::new(self.clone());
+    }
+    fn set_status(&mut self) {
+        todo!()
     }
 }
