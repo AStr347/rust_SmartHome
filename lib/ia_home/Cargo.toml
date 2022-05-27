@@ -1,10 +1,9 @@
 [package]
-name = "rust_stud2"
+name = "ia_home"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ia_devices  = { path = "lib/ia_devices" }
-ia_home     = { path = "lib/ia_home" }
+ia_devices  = { path = "../ia_devices" }

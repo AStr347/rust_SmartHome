@@ -10,7 +10,7 @@ pub struct Soket {
 impl TDevice for Soket {
     fn get_status(&self) -> String {
         let sstate = if self.state { "on" } else { "off" };
-        return format!("it's {:20}\tstate: {:5}\tpower: {:5}W", self.name, sstate, self.power);
+        return format!("it's {:50}\tstate: {:5}\tpower: {:5}W", self.name, sstate, self.power);
     }
     fn get_type(&self) -> DeviceType {
         return DeviceType::DtSoket;
@@ -20,6 +20,9 @@ impl TDevice for Soket {
     }
     fn set_status(&mut self) {
         self.change_state();
+    }
+    fn get_name(&self) -> &String {
+        return &self.name;
     }
 }
 

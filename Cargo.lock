@@ -7,8 +7,16 @@ name = "ia_devices"
 version = "0.1.0"
 
 [[package]]
-name = "rust_stud1"
+name = "ia_home"
 version = "0.1.0"
 dependencies = [
  "ia_devices",
+]
+
+[[package]]
+name = "rust_stud2"
+version = "0.1.0"
+dependencies = [
+ "ia_devices",
+ "ia_home",
 ]
