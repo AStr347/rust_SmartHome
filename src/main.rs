@@ -1,11 +1,8 @@
 extern crate ia_devices;
-use ia_devices::devices::soket::*;
-use ia_devices::devices::weather::*;
-use ia_devices::devices::window::*;
+use ia_devices::devices::{soket::*, weather::*, window::*};
 
 extern crate ia_home;
-use ia_home::home::home::*;
-use ia_home::home::room::*;
+use ia_home::home::{home::*, room::*};
 
 fn main() {
     let soket0 = Soket {
