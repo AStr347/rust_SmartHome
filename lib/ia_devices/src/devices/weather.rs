@@ -8,8 +8,8 @@ pub struct Weather {
 }
 
 impl TDevice for Weather {
-    fn get_name(&self) -> String {
-        return "Weather".to_string();
+    fn get_status(&self) -> String {
+        return format!("it's Smart Weather\ttemp: {}\thum: {}%", self.temp, self.hum);
     }
     fn get_type(&self) -> DeviceType {
         return DeviceType::DtWindow;

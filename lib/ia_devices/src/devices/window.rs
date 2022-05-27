@@ -8,8 +8,8 @@ pub struct Window {
 }
 
 impl TDevice for Window {
-    fn get_name(&self) -> String {
-        return "Window".to_string();
+    fn get_status(&self) -> String {
+        return format!("it's Smart Window\tpos: {}\tcharge: {}%", self.pos, self.ch);
     }
     fn get_type(&self) -> DeviceType {
         return DeviceType::DtWindow;

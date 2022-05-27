@@ -8,14 +8,28 @@ pub struct Soket {
 }
 
 impl TDevice for Soket {
-    fn get_name(&self) -> String {
-        return "Soket".to_string();
+    fn get_status(&self) -> String {
+        let sstate = if self.state { "on" } else { "off" };
+        return format!("it's Smart Soket\tsate: {}\tpower: {}W", sstate, self.power);
     }
     fn get_type(&self) -> DeviceType {
         return DeviceType::DtSoket;
     }
     fn get_box(&self) -> Box<dyn TDevice> {
         return Box::new(*self);
+    }
+}
+
+impl Soket {
+    pub fn change_state(&mut self){
+        let state = self.state;
+        if(true == state){
+            self.state = false;
+            self.power = 0;
+        } else {
+            self.state = true;
+            self.power = 3000;
+        }
     }
 }
 
