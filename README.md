@@ -1,5 +1,5 @@
-# rust_stud2
+# rust_SmartHome
 ## Project for study rust
 
-### start understand how create libs and use traits
+Smarthome struct with rooms and devices
 
