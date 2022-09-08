@@ -20,10 +20,10 @@ impl TDevice for Soket {
         );
     }
     fn get_type(&self) -> DeviceType {
-        return DeviceType::DtSoket;
+        return DeviceType::Soket;
     }
-    fn get_box(&self) -> Box<dyn TDevice> {
-        return Box::new(self.clone());
+    fn get_box(&self) -> Box<dyn TDevice + Send> {
+        Box::new(self.clone())
     }
     fn set_status(&mut self, args: &HashMap<&str, u64>) {
         let new_state = args.get("state");
@@ -58,6 +58,13 @@ impl Soket {
         } else {
             self.state = true;
             self.power = 3000;
+        }
+    }
+    pub fn new(name: String) -> Self {
+        Self {
+            name: name,
+            power: 0,
+            state: false,
         }
     }
 }

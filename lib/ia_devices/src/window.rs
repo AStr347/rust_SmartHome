@@ -19,10 +19,10 @@ impl TDevice for Window {
         );
     }
     fn get_type(&self) -> DeviceType {
-        return DeviceType::DtWindow;
+        return DeviceType::Window;
     }
-    fn get_box(&self) -> Box<dyn TDevice> {
-        return Box::new(self.clone());
+    fn get_box(&self) -> Box<dyn TDevice + Send> {
+        Box::new(self.clone())
     }
     fn set_status(&mut self, args: &HashMap<&str, u64>) {
         let new_pos = args.get("pos");
@@ -43,5 +43,15 @@ impl TDevice for Window {
 
     fn get_statuses(&self) -> HashMap<&str, u64> {
         return HashMap::from([("pos", self.pos as u64), ("ch", self.ch as u64)]);
+    }
+}
+
+impl Window {
+    pub fn new(name: String) -> Self {
+        Self {
+            name: name,
+            pos: 0,
+            ch: 100,
+        }
     }
 }

@@ -1,61 +1,50 @@
 use ia_devices::device::TDevice;
 use std::fmt;
 
+use crate::homeerrors::HomeErrors;
+
 pub struct Room {
     pub name: String,
-    devices: Vec<Box<dyn TDevice>>,
+    devices: Vec<Box<dyn TDevice + Send>>,
 }
 
 impl Room {
-    pub fn new(name: String) -> Self {
+    fn get_device_pos(&self, device_name: &str) -> Result<usize, HomeErrors> {
+        let pos = self
+            .devices
+            .iter()
+            .position(|x| -> bool { *x.get_name() == *device_name });
+        if let Some(x) = pos {
+            return Ok(x);
+        }
+        Err(HomeErrors::NotExist(device_name.to_string()))
+    }
+
+    pub fn new(name: &str) -> Self {
         Self {
-            name,
+            name: name.to_string(),
             devices: Vec::new(),
         }
     }
-    pub fn add_device(&mut self, device: impl TDevice) -> bool {
+    pub fn add_device(&mut self, device: impl TDevice) -> Result<(), HomeErrors> {
         let device_name = device.get_name();
-        let pos = self.devices.iter().position(|x| -> bool {
-            return *x.get_name() == *device_name;
-        });
-        match pos {
-            Some(_) => {
-                return false;
-            }
-            None => {
-                let tmp = device.get_box();
-                self.devices.push(tmp);
-                return true;
-            }
+        let pos = self.get_device_pos(device_name);
+        if let Ok(_) = pos {
+            return Err(HomeErrors::AlreadyExist(device_name.clone()));
         }
+        let tmp = device.get_box();
+        self.devices.push(tmp);
+        Ok(())
     }
-    pub fn remove_device(&mut self, device_name: &String) -> bool {
-        let pos = self.devices.iter().position(|x| -> bool {
-            return *x.get_name() == *device_name;
-        });
-        match pos {
-            Some(x) => {
-                self.devices.remove(x);
-                return true;
-            }
-            None => {
-                return false;
-            }
-        }
+    pub fn remove_device(&mut self, device_name: &str) -> Result<(), HomeErrors> {
+        let pos = self.get_device_pos(device_name)?;
+        self.devices.remove(pos);
+        Ok(())
     }
 
-    pub fn show_device(&self, device_name: &String){
-        let pos = self.devices.iter().position(|x| -> bool {
-            return *x.get_name() == *device_name;
-        });
-        match pos {
-            Some(x) => {
-                println!("{}", self.devices[x]);
-            }
-            None => {
-                println!("have not deivce named {} inside room {}", device_name, self.name);
-            }
-        }
+    pub fn show_device(&self, device_name: &str) -> Result<String, HomeErrors> {
+        let pos = self.get_device_pos(device_name)?;
+        Ok(format!("{}", self.devices[pos]))
     }
 }
 
