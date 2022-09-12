@@ -28,14 +28,14 @@ impl TDevice for Weather {
         let new_temp = args.get("temp");
         match new_temp {
             Some(x) => {
-                self.temp = (*x as _);
+                self.temp = *x as f32;
             }
             None => {}
         }
         let new_hum = args.get("hum");
         match new_hum {
             Some(x) => {
-                self.hum = (*x as _);
+                self.hum = *x as u8;
             }
             None => {}
         }

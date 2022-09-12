@@ -28,14 +28,14 @@ impl TDevice for Window {
         let new_pos = args.get("pos");
         match new_pos {
             Some(x) => {
-                self.pos = (*x as _);
+                self.pos = *x as u8;
             }
             None => {}
         }
         let new_ch = args.get("ch");
         match new_ch {
             Some(x) => {
-                self.ch = (*x as _);
+                self.ch = *x as u8;
             }
             None => {}
         }

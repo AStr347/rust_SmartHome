@@ -1,7 +1,7 @@
-use std::sync::Mutex;
 use actix_web::{web::Data, App, HttpServer};
 use handlers::*;
 use ia_home::home::Home;
+use std::sync::Mutex;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

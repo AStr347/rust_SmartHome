@@ -7,7 +7,11 @@ use actix_web::{
 };
 use ia_home::home::Home;
 
-#[route("/api/smarthome/v1.0", method = "GET", method = "HEAD")]
+#[route(
+    "/api/smarthome/v1.0",
+    method = "GET",
+    method = "HEAD"
+)]
 ///
 /// GET and HEAD handler
 /// always return HttpResponse with "check_health" text
@@ -19,7 +23,11 @@ pub async fn check_health() -> impl Responder {
     return response;
 }
 
-#[route("/api/smarthome/v1.0/home/show", method = "GET", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/show",
+    method = "GET",
+    method = "POST"
+)]
 ///
 /// GET and HEAD handler
 /// always return HttpResponse with "check_health" text

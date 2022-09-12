@@ -20,7 +20,11 @@ fn bad_req(body: &str) -> HttpResponse<BoxBody> {
     return response;
 }
 
-#[route("/api/smarthome/v1.0/home/rooms/show", method = "GET", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/rooms/show",
+    method = "GET",
+    method = "POST"
+)]
 ///
 /// GET and POST handler
 /// check Room-Name exist and create answer
@@ -47,7 +51,11 @@ pub async fn show_room(req: HttpRequest, home: Data<Mutex<Home>>) -> impl Respon
     return bad_req("show_room called without Room-Name");
 }
 
-#[route("/api/smarthome/v1.0/home/rooms/del", method = "GET", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/rooms/del",
+    method = "GET",
+    method = "POST"
+)]
 ///
 /// GET and POST handler
 /// check Room-Name exist and create answer
@@ -74,7 +82,10 @@ pub async fn del_room(req: HttpRequest, home: Data<Mutex<Home>>) -> impl Respond
     return bad_req("del_room called without Room-Name");
 }
 
-#[route("/api/smarthome/v1.0/home/rooms/add", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/rooms/add",
+    method = "POST"
+)]
 ///
 /// POST handler
 /// check Room-Name exist and create answer

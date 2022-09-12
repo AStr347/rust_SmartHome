@@ -35,10 +35,10 @@ impl TDevice for Soket {
             }
             _ => {}
         }
-        if (true == self.state) {
+        if true == self.state {
             let new_power = args.get("power");
             match new_power {
-                Some(x) => self.power = (*x as u32),
+                Some(x) => self.power = *x as u32,
                 None => self.power = 3000,
             }
         }
@@ -52,7 +52,7 @@ impl TDevice for Soket {
 impl Soket {
     pub fn change_state(&mut self) {
         let state = self.state;
-        if (true == state) {
+        if true == state {
             self.state = false;
             self.power = 0;
         } else {

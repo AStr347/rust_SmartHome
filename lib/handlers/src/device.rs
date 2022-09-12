@@ -21,7 +21,11 @@ fn bad_req(body: &str) -> HttpResponse<BoxBody> {
     return response;
 }
 
-#[route("/api/smarthome/v1.0/home/rooms/devices/show", method = "GET", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/rooms/devices/show",
+    method = "GET",
+    method = "POST"
+)]
 ///
 /// GET and POST handler
 /// check Room-Name and Device-Name exist, and create answer
@@ -49,7 +53,11 @@ pub async fn show_device(req: HttpRequest, home: Data<Mutex<Home>>) -> impl Resp
     return bad_req("show_room called without Room-Name or Device-Name");
 }
 
-#[route("/api/smarthome/v1.0/home/rooms/devices/del", method = "GET", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/rooms/devices/del",
+    method = "GET",
+    method = "POST"
+)]
 ///
 /// GET and POST handler
 /// check Room-Name and Device-Name exist, and create answer
@@ -80,7 +88,10 @@ pub async fn del_device(req: HttpRequest, home: Data<Mutex<Home>>) -> impl Respo
     return bad_req("del_room called without Room-Name or Device-Name");
 }
 
-#[route("/api/smarthome/v1.0/home/rooms/devices/add", method = "POST")]
+#[route(
+    "/api/smarthome/v1.0/home/rooms/devices/add",
+    method = "POST"
+)]
 ///
 /// POST handler
 /// check Room-Name and Device exist, and create answer

@@ -1,17 +1,16 @@
-use std::{str::FromStr, collections::HashMap, io};
+use std::{collections::HashMap, io, str::FromStr};
 
+use hyper::{client::conn::SendRequest, *};
 use tokio::net::TcpStream;
-use hyper::{*, body::HttpBody, client::conn::SendRequest};
 
-const MAIN_URL : &str = "http://127.0.0.1:3000/api/smarthome/v1.0";
+const MAIN_URL: &str = "http://127.0.0.1:3000/api/smarthome/v1.0";
 
-async fn connect(url: &Uri) -> SendRequest<Body>{
-
+async fn connect(url: &Uri) -> SendRequest<Body> {
     let host = url.host().expect("uri has no host");
     let port = url.port_u16().unwrap_or(80);
     let addr = format!("{}:{}", host, port);
     let stream = TcpStream::connect(addr).await.unwrap();
-    let (mut sender, conn) = hyper::client::conn::handshake(stream).await.unwrap();
+    let (sender, conn) = hyper::client::conn::handshake(stream).await.unwrap();
     tokio::task::spawn(async move {
         if let Err(err) = conn.await {
             println!("Connection failed: {:?}", err);
@@ -20,25 +19,20 @@ async fn connect(url: &Uri) -> SendRequest<Body>{
     sender
 }
 
-async fn print_response(res : Response<Body>){
+async fn print_response(res: Response<Body>) {
     let status = res.status();
     let bytes = body::to_bytes(res.into_body()).await.unwrap();
     let body = String::from_utf8(bytes.to_vec()).unwrap();
     println!("{}\t\tBody:\n{}", status, body);
 }
 
-async fn request(
-        path : &str, 
-        method:&str, 
-        headers: HashMap<&str, &String>
-    ) -> Response<Body>
-{
+async fn request(path: &str, method: &str, headers: HashMap<&str, &String>) -> Response<Body> {
     let end_path = MAIN_URL.to_owned() + path;
     let url = Uri::from_str(&end_path).unwrap();
     let mut sender = connect(&url).await;
 
     let mut req = Request::builder().uri(url).method(method);
-    for (key, value) in headers{
+    for (key, value) in headers {
         req = req.header(key, value);
     }
     let req = req.body(Body::empty()).unwrap();
@@ -71,16 +65,16 @@ fn read_u32() -> Option<u32> {
 }
 
 enum Commands {
-    Exit,                                                //0
-    AddRoom(String),                                     //1
-    AddDevice(String),                                   //2
-    RemoveRoom(String),                                  //3
-    RemoveDevice(String, String),                        //4
+    Exit,                         //0
+    AddRoom(String),              //1
+    AddDevice(String),            //2
+    RemoveRoom(String),           //3
+    RemoveDevice(String, String), //4
     //UpdateDevice(String, String, HashMap<&'a str, u64>), //5
-    ShowHome,                                            //6
-    ShowRoom(String),                                    //7
-    ShowDevice(String, String),                          //8
-    ShowInstruct,                                        //9
+    ShowHome,                   //6
+    ShowRoom(String),           //7
+    ShowDevice(String, String), //8
+    ShowInstruct,               //9
     Noop,
 }
 
@@ -161,9 +155,7 @@ impl Commands {
                 return Commands::Exit;
             }
             Commands::AddRoom(roomname) => {
-                let headers : HashMap<&str, &String> = HashMap::from([
-                    ("Room-Name", roomname),
-                ]);
+                let headers: HashMap<&str, &String> = HashMap::from([("Room-Name", roomname)]);
                 let res = request("/home/rooms/add", "POST", headers).await;
                 print_response(res).await;
             }
@@ -174,50 +166,40 @@ impl Commands {
                 let dtype = read();
 
                 let payload = format!("\"dtype\":\"{}\",\"name\":\"{}\"", dtype, name);
-                let mut device : String = "{".to_string();
+                let mut device: String = "{".to_string();
                 device += &payload;
                 device += "}";
 
-                let headers : HashMap<&str, &String> = HashMap::from([
-                    ("Room-Name", roomname),
-                    ("DeviceBuilder", &device),
-                ]);
+                let headers: HashMap<&str, &String> =
+                    HashMap::from([("Room-Name", roomname), ("DeviceBuilder", &device)]);
                 let res = request("/home/rooms/devices/add", "POST", headers).await;
                 print_response(res).await;
             }
             Commands::RemoveRoom(roomname) => {
-                let headers : HashMap<&str, &String> = HashMap::from([
-                    ("Room-Name", roomname),
-                ]);
+                let headers: HashMap<&str, &String> = HashMap::from([("Room-Name", roomname)]);
                 let res = request("/home/rooms/del", "POST", headers).await;
                 print_response(res).await;
             }
             Commands::RemoveDevice(roomname, devicename) => {
-                let headers : HashMap<&str, &String> = HashMap::from([
-                    ("Room-Name", roomname),
-                    ("Device-Name", devicename),
-                ]);
+                let headers: HashMap<&str, &String> =
+                    HashMap::from([("Room-Name", roomname), ("Device-Name", devicename)]);
                 let res = request("/home/rooms/devices/del", "POST", headers).await;
                 print_response(res).await;
             }
             //Commands::UpdateDevice(_, _, _) => todo!(),
             Commands::ShowHome => {
-                let headers : HashMap<&str, &String> = HashMap::new();
+                let headers: HashMap<&str, &String> = HashMap::new();
                 let res = request("/home/show", "GET", headers).await;
                 print_response(res).await;
             }
             Commands::ShowRoom(roomname) => {
-                let headers : HashMap<&str, &String> = HashMap::from([
-                    ("Room-Name", roomname),
-                ]);
+                let headers: HashMap<&str, &String> = HashMap::from([("Room-Name", roomname)]);
                 let res = request("/home/rooms/show", "GET", headers).await;
                 print_response(res).await;
             }
             Commands::ShowDevice(roomname, devicename) => {
-                let headers : HashMap<&str, &String> = HashMap::from([
-                    ("Room-Name", roomname),
-                    ("Device-Name", devicename),
-                ]);
+                let headers: HashMap<&str, &String> =
+                    HashMap::from([("Room-Name", roomname), ("Device-Name", devicename)]);
                 let res = request("/home/rooms/devices/show", "GET", headers).await;
                 print_response(res).await;
             }
@@ -225,7 +207,7 @@ impl Commands {
                 print_commands();
             }
         }
-        
+
         Commands::Noop
     }
 }
