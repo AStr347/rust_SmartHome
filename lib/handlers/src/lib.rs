@@ -1,3 +1,3 @@
+pub mod device;
 pub mod home;
-pub mod homeerrors;
 pub mod room;
